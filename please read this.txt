@@ -1,0 +1,6 @@
+Hello ma'am,
+the password of the admin can be changed using register.
+the current password is-:
+
+username-praveen
+password-oops

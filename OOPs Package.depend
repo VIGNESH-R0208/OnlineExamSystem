@@ -1,0 +1,27 @@
+# depslib dependency file v1.0
+1588928396 source:c:\users\91807\desktop\oops package\main.cpp
+	<iostream>
+	<stdlib.h>
+	"admin.h"
+	"student.h"
+
+1588934910 c:\users\91807\desktop\oops package\admin.h
+	<iostream>
+	<string.h>
+	<stdio.h>
+	<fstream>
+	"questions.h"
+
+1588944378 c:\users\91807\desktop\oops package\questions.h
+	<iostream>
+	<fstream>
+
+1588924348 c:\users\91807\desktop\oops package\student.h
+	<iostream>
+	<fstream>
+	"test.h"
+
+1588947758 c:\users\91807\desktop\oops package\test.h
+	<iostream>
+	<fstream>
+
