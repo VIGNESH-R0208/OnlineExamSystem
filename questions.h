@@ -13,19 +13,19 @@ class questions {
 private:
     std::fstream file2;
     int c;
-    QUESTION question;  // Moved the question variable to the class scope
+    QUESTION question;
 
 public:
     void ques();
     void getQuestionAnswer(QUESTION &question);
     void writeQuestionToExam();
     void addQuestionToExam();
-    void readExam();
+    void readExam() const;
 };
 
 void questions::getQuestionAnswer(QUESTION &question) {
     std::cout << "\n enter the question:";
-    std::cin.ignore();  // Removed fflush(stdin)
+    std::cin.ignore();
     std::getline(std::cin, question.que);
 
     for (int i = 0; i < 5; i++) {
@@ -49,7 +49,7 @@ void questions::writeQuestionToExam() {
 
     getQuestionAnswer(question);
 
-    file2.write((char *)&question, sizeof(question));
+    file2.write(reinterpret_cast<char*>(&question), sizeof(question));
     file2.close();
 }
 
@@ -59,17 +59,17 @@ void questions::addQuestionToExam() {
 
     getQuestionAnswer(question);
 
-    file2.write((char *)&question, sizeof(question));
+    file2.write(reinterpret_cast<char*>(&question), sizeof(question));
     file2.close();
 }
 
-void questions::readExam() {
+void questions::readExam() const {
     std::cout << "\n\t\t\t\t*********View Exam Paper*********\n";
     int coun;
     file2.open("exam.txt", std::ios::binary | std::ios::in | std::ios::out);
     file2.seekg(0L, std::ios::beg);
 
-    while (file2.read((char *)&question, sizeof(question))) {  // Fixed the syntax issue
+    while (file2.read(reinterpret_cast<char*>(&question), sizeof(question))) {
         coun = 0;
         std::cout << "\n" << question.que << "\n";
 
