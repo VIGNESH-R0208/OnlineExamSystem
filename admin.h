@@ -1,92 +1,76 @@
 #pragma once
-#include<iostream>
-#include<string.h>
-#include<stdio.h>
-#include<fstream>
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "questions.h"
-using namespace std;
 
-struct SECURITY{
-    char username[20];
-    char password[20];
+struct SECURITY {
+    std::string username;
+    std::string password;
 };
 
-class admin{
+class admin {
 private:
     SECURITY security;
-    fstream file;
-    int ch,flag;
+    std::fstream file;
+    int ch;
+    int flag;
     questions q;
+
 public:
     admin();
     void Register();
     int login();
 };
 
-//Constructor Definition
-admin::admin(){
-    cout<<"\t\t\t\t********Welcome To the Administrator Section********\n";
-    cout<<"\n1-Register\n2-Login\nEnter:";
-    cin>>ch;
-    if(ch==1)
-    {
+admin::admin() {
+    std::cout << "\t\t\t\t********Welcome To the Administrator Section********\n";
+    std::cout << "\n1-Register\n2-Login\nEnter:";
+    std::cin >> ch;
+    if (ch == 1) {
         Register();
-    }
-    else if(ch==2)
-    {
-        flag=login();
-        if(flag)
-        {
-            cout<<"\nLogin successful!!\n";
+    } else if (ch == 2) {
+        flag = login();
+        if (flag) {
+            std::cout << "\nLogin successful!!\n";
             q.ques();
+        } else {
+            std::cout << "\nIncorrect Username or Password!!\nRegister to change Username & Password\n\n";
         }
-        else
-        {
-            cout<<"\nIncorrect Username or Password!!\nRegister to change Username & Password\n\n";
-        }
-    }
-    else
-    {
-        cout<<"\nGood Bye!!\n";
+    } else {
+        std::cout << "\nGood Bye!!\n";
     }
 }
 
-//Register Function Definition
-void admin::Register()
-{
-    file.open("security.txt",ios::binary|ios::in|ios::out);
-    file.seekp(0L,ios::beg);
-    cout<<"\nEnter new Username:";
-    fflush(stdin);
-    gets(security.username);
-    //file.write((char *)&security,sizeof(security));
-    cout<<"\nEnter new Password:";
-    fflush(stdin);
-    gets(security.password);
-    file.write((char *)&security,sizeof(security));
+void admin::Register() {
+    file.open("security.txt", std::ios::binary | std::ios::in | std::ios::out);
+    file.seekp(0L, std::ios::beg);
+    std::cout << "\nEnter new Username:";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, security.username);
+    std::cout << "\nEnter new Password:";
+    std::getline(std::cin, security.password);
+    file.write((char*)&security, sizeof(security));
     file.close();
-    cout<<"\nThank You for registering\n";
+    std::cout << "\nThank You for registering\n";
 }
 
-//Login Function Definition
-int admin::login()
-{
-    char uname[20],passwd[20];
-    file.open("security.txt",ios::binary|ios::in|ios::out);
-    file.seekg(0L,ios::beg);
-    cout<<"\nENTER USERNAME:";
-    fflush(stdin);
-    gets(uname);
-    cout<<"\nENTER PASSWORD:";
-    fflush(stdin);
-    gets(passwd);
-    file.read((char *)&security,sizeof(security));
-    if((strcmp(uname,security.username)==0)&&(strcmp(passwd,security.password)==0))
-        flag=1;
+int admin::login() {
+    std::string uname, passwd;
+    file.open("security.txt", std::ios::binary | std::ios::in | std::ios::out);
+    file.seekg(0L, std::ios::beg);
+    std::cout << "\nENTER USERNAME:";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, uname);
+    std::cout << "\nENTER PASSWORD:";
+    std::getline(std::cin, passwd);
+    file.read((char*)&security, sizeof(security));
+    if (uname == security.username && passwd == security.password)
+        flag = 1;
     else
-        flag=0;
+        flag = 0;
     file.close();
-    if(flag==1)
+    if (flag == 1)
         return 1;
     else
         return 0;
