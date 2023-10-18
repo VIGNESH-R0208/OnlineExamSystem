@@ -1,17 +1,19 @@
 #include <iostream>
 #include <fstream>
-using namespace std;
+#include <string>
+#include <vector>
 
 struct QUESTION {
-    char que[500];
-    char ans[5][100];
+    std::string que;
+    std::vector<std::string> ans;
     int anss;
 };
 
 class questions {
 private:
-    fstream file2;
+    std::fstream file2;
     int c;
+    QUESTION question;  // Moved the question variable to the class scope
 
 public:
     void ques();
@@ -22,19 +24,18 @@ public:
 };
 
 void questions::getQuestionAnswer(QUESTION &question) {
-    cout << "\n enter the question:";
-    fflush(stdin);
-    gets(question.que);
+    std::cout << "\n enter the question:";
+    std::cin.ignore();  // Removed fflush(stdin)
+    std::getline(std::cin, question.que);
 
     for (int i = 0; i < 5; i++) {
-        cout << "\n enter the " << (i + 1) << " answer:";
-        fflush(stdin);
-        gets(question.ans[i]);
+        std::cout << "\n enter the " << (i + 1) << " answer:";
+        std::getline(std::cin, question.ans[i]);
 
-        cout << "\n Is it the correct answer? (1 for yes, 2 for no): ";
+        std::cout << "\n Is it the correct answer? (1 for yes, 2 for no): ";
         int isCorrect;
-        cin >> isCorrect;
-        question.ans[i] = isCorrect;
+        std::cin >> isCorrect;
+        question.ans.push_back(isCorrect == 1 ? "yes" : "no");
 
         if (isCorrect == 1) {
             question.anss = i;
@@ -43,10 +44,9 @@ void questions::getQuestionAnswer(QUESTION &question) {
 }
 
 void questions::writeQuestionToExam() {
-    file2.open("exam.txt", ios::binary | ios::in | ios::out);
-    file2.seekp(0L, ios::beg);
+    file2.open("exam.txt", std::ios::binary | std::ios::in | std::ios::out);
+    file2.seekp(0L, std::ios::beg);
 
-    QUESTION question;
     getQuestionAnswer(question);
 
     file2.write((char *)&question, sizeof(question));
@@ -54,10 +54,9 @@ void questions::writeQuestionToExam() {
 }
 
 void questions::addQuestionToExam() {
-    file2.open("exam.txt", ios::binary | ios::in | ios::out);
-    file2.seekp(0L, ios::end);
+    file2.open("exam.txt", std::ios::binary | std::ios::in | std::ios::out);
+    file2.seekp(0L, std::ios::end);
 
-    QUESTION question;
     getQuestionAnswer(question);
 
     file2.write((char *)&question, sizeof(question));
@@ -65,34 +64,34 @@ void questions::addQuestionToExam() {
 }
 
 void questions::readExam() {
-    cout << "\n\t\t\t\t*********View Exam Paper*********\n";
+    std::cout << "\n\t\t\t\t*********View Exam Paper*********\n";
     int coun;
-    file2.open("exam.txt", ios::binary | ios::in | ios::out);
-    file2.seekg(0L, ios::beg);
+    file2.open("exam.txt", std::ios::binary | std::ios::in | std::ios::out);
+    file2.seekg(0L, std::ios::beg);
 
-    while (file2.read((char *)&question, sizeof(question)) {
+    while (file2.read((char *)&question, sizeof(question))) {  // Fixed the syntax issue
         coun = 0;
-        cout << "\n" << question.que << "\n";
+        std::cout << "\n" << question.que << "\n";
 
         for (int i = 0; i < 5; i++) {
-            cout << (i + 1) << "*) " << question.ans[i] << "\n";
+            std::cout << (i + 1) << "*) " << question.ans[i] << "\n";
         }
 
         for (int i = 0; i < 5; i++) {
             ++coun;
-            if (question.ans[i] == 1) {
-                cout << "\nAnswer is: " << (i + 1);
+            if (question.ans[i] == "yes") {
+                std::cout << "\nAnswer is: " << (i + 1);
             }
         }
-        cout << "\n\n**********\n";
+        std::cout << "\n\n**********\n";
     }
 
     file2.close();
 }
 
 void questions::ques() {
-    cout << "\n1-To set a new exam\n2-Add a question to an existing exam\n3-View Exam Paper\nEnter: ";
-    cin >> c;
+    std::cout << "\n1-To set a new exam\n2-Add a question to an existing exam\n3-View Exam Paper\nEnter: ";
+    std::cin >> c;
 
     if (c == 1) {
         writeQuestionToExam();
@@ -101,7 +100,7 @@ void questions::ques() {
     } else if (c == 3) {
         readExam();
     } else {
-        cout << "\nSee you next time! Bye!\n";
+        std::cout << "\nSee you next time! Bye!\n";
     }
 }
 
